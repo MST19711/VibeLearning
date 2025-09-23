@@ -2,6 +2,8 @@
 
 A command-line tool to automatically add date watermarks to photos based on EXIF data.
 
+📚 **Documentation Languages**: [English](./README.md) | [中文](./README.zh-CN.md)
+
 ## Features
 
 - Extracts date information from EXIF data
@@ -218,3 +220,28 @@ If you want to contribute or modify this tool:
    ```bash
    uv run pytest
    ```
+
+## Documentation Languages
+
+- [English README](./README.md) - This document (English)
+- [中文 README](./README.zh-CN.md) - Chinese documentation
+
+## License
+
+MIT License - See LICENSE file in project root (if present)
+
+## Contributing
+
+Issues and feature requests are welcome! Feel free to submit a Pull Request.
+
+## Support
+
+If you encounter problems or have questions:
+1. Check this README documentation
+2. Use the `--help` parameter to see command-line options
+3. Check if your photos have EXIF data
+4. Ensure your image format is supported
+
+---
+
+**Note**: This tool is designed to process photos containing EXIF date information. If your photos don't have EXIF data, the tool will skip these files and show a notification. This is normal behavior, not an error.
