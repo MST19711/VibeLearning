@@ -110,8 +110,10 @@ class OutputDirectorySelector extends StatelessWidget {
     );
 
     if (result != null) {
-      final appState = Provider.of<AppState>(context, listen: false);
-      appState.setOutputDirectory(result);
+      if (context.mounted) {
+        final appState = Provider.of<AppState>(context, listen: false);
+        appState.setOutputDirectory(result);
+      }
     }
   }
 }

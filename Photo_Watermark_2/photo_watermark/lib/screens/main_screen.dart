@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import '../models/app_state.dart';
 import '../widgets/image_list.dart';
 import '../widgets/watermark_controls.dart';
-import '../widgets/process_button.dart';
 import '../widgets/output_directory_selector.dart';
+import '../widgets/real_time_preview.dart';
+import '../widgets/nine_grid_position_selector.dart';
+import '../widgets/rotation_control.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -24,51 +26,76 @@ class MainScreen extends StatelessWidget {
       ),
       body: Consumer<AppState>(
         builder: (context, appState, child) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Image selection section
-                _buildSectionTitle(context, 'Select Images'),
-                const SizedBox(height: 8),
-                const ImageList(),
-                const SizedBox(height: 24),
-                
-                // Watermark settings section
-                _buildSectionTitle(context, 'Watermark Settings'),
-                const SizedBox(height: 8),
-                const WatermarkControls(),
-                const SizedBox(height: 24),
-                
-                // Output directory section
-                _buildSectionTitle(context, 'Output Settings'),
-                const SizedBox(height: 8),
-                const OutputDirectorySelector(),
-                const SizedBox(height: 32),
-                
-                // Process button
-                Center(
-                  child: ProcessButton(
-                    onPressed: appState.selectedImages.isEmpty || appState.watermarkText.isEmpty
-                        ? null
-                        : () => _processImages(context),
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Left panel - Controls
+              SizedBox(
+                width: 350,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const ImageList(),
+                      const SizedBox(height: 16),
+                      const WatermarkControls(),
+                      const SizedBox(height: 16),
+                      const NineGridPositionSelector(),
+                      const SizedBox(height: 16),
+                      const RotationControl(),
+                      const SizedBox(height: 16),
+                      const OutputDirectorySelector(),
+                      const SizedBox(height: 24),
+                      _buildProcessButton(context),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              
+              // Right panel - Preview
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  child: const RealTimePreview(),
+                ),
+              ),
+            ],
           );
         },
       ),
     );
   }
 
-  Widget _buildSectionTitle(BuildContext context, String title) {
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-        fontWeight: FontWeight.bold,
-      ),
+  Widget _buildProcessButton(BuildContext context) {
+    return Consumer<AppState>(
+      builder: (context, appState, child) {
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: appState.selectedImages.isEmpty || appState.watermarkText.isEmpty
+                ? null
+                : () => _processImages(context),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            child: appState.isProcessing
+                ? const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 8),
+                      Text('Processing...'),
+                    ],
+                  )
+                : const Text('Process Images'),
+          ),
+        );
+      },
     );
   }
 

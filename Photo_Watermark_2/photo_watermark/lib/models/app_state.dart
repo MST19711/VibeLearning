@@ -9,6 +9,9 @@ class AppState extends ChangeNotifier {
   double _watermarkSize = 24;
   Color _watermarkColor = Colors.white;
   Offset _watermarkPosition = const Offset(10, 10);
+  double _watermarkRotation = 0.0; // 新增：旋转角度
+  int _currentPreviewIndex = 0; // 新增：当前预览图片索引
+  bool _isDragging = false; // 新增：是否正在拖拽
   bool _isProcessing = false;
   String _outputDirectory = '';
 
@@ -18,21 +21,50 @@ class AppState extends ChangeNotifier {
   double get watermarkSize => _watermarkSize;
   Color get watermarkColor => _watermarkColor;
   Offset get watermarkPosition => _watermarkPosition;
+  double get watermarkRotation => _watermarkRotation;
+  int get currentPreviewIndex => _currentPreviewIndex;
+  bool get isDragging => _isDragging;
+  File? get currentPreviewImage => _selectedImages.isEmpty ? null : _selectedImages[_currentPreviewIndex];
   bool get isProcessing => _isProcessing;
   String get outputDirectory => _outputDirectory;
+  bool get hasImages => _selectedImages.isNotEmpty;
 
   void addImages(List<File> images) {
     _selectedImages.addAll(images);
+    _currentPreviewIndex = 0; // 重置预览索引
     notifyListeners();
   }
 
   void removeImage(int index) {
     _selectedImages.removeAt(index);
+    if (_currentPreviewIndex >= _selectedImages.length && _selectedImages.isNotEmpty) {
+      _currentPreviewIndex = _selectedImages.length - 1;
+    } else if (_selectedImages.isEmpty) {
+      _currentPreviewIndex = 0;
+    }
     notifyListeners();
   }
 
   void clearImages() {
     _selectedImages.clear();
+    _currentPreviewIndex = 0;
+    notifyListeners();
+  }
+
+  void setCurrentPreviewIndex(int index) {
+    if (index >= 0 && index < _selectedImages.length) {
+      _currentPreviewIndex = index;
+      notifyListeners();
+    }
+  }
+
+  void setWatermarkRotation(double rotation) {
+    _watermarkRotation = rotation;
+    notifyListeners();
+  }
+
+  void setIsDragging(bool isDragging) {
+    _isDragging = isDragging;
     notifyListeners();
   }
 

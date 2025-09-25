@@ -221,30 +221,15 @@ class WatermarkControls extends StatelessWidget {
   }
 
   Widget _buildPreviewSection(BuildContext context, AppState appState) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Preview', style: TextStyle(fontSize: 16)),
-        const SizedBox(height: 8),
-        Container(
-          height: 60,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300),
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.grey.shade100,
-          ),
-          child: Center(
-            child: Text(
-              appState.watermarkText.isEmpty ? 'Enter watermark text' : appState.watermarkText,
-              style: TextStyle(
-                fontSize: appState.watermarkSize / 2,
-                color: appState.watermarkColor.withOpacity(appState.watermarkOpacity),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+        Text(
+          'Real-time Preview',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
+        SizedBox(height: 8),
+        // The preview will be integrated in the main screen layout
       ],
     );
   }

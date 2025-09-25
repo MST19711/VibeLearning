@@ -65,20 +65,24 @@ class ImageList extends StatelessWidget {
                         itemCount: appState.selectedImages.length,
                         itemBuilder: (context, index) {
                           final image = appState.selectedImages[index];
-                          return ListTile(
-                            leading: const Icon(Icons.image),
-                            title: Text(
-                              image.path.split('/').last,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: Text(
-                              _formatFileSize(image),
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => appState.removeImage(index),
+                          return Card(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            child: ListTile(
+                              leading: const Icon(Icons.image, size: 40),
+                              title: Text(
+                                image.path.split('/').last,
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(_formatFileSize(image)),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.remove_circle_outline, color: Colors.red),
+                                onPressed: () => appState.removeImage(index),
+                              ),
+                              selected: index == appState.currentPreviewIndex,
+                              selectedTileColor: Colors.blue.shade50,
+                              onTap: () {
+                                appState.setCurrentPreviewIndex(index);
+                              },
                             ),
                           );
                         },
@@ -135,9 +139,11 @@ class ImageList extends StatelessWidget {
     );
 
     if (result != null && result.files.isNotEmpty) {
-      final appState = Provider.of<AppState>(context, listen: false);
-      final images = result.paths.map((path) => File(path!)).toList();
-      appState.addImages(images);
+      if (context.mounted) {
+        final appState = Provider.of<AppState>(context, listen: false);
+        final images = result.paths.map((path) => File(path!)).toList();
+        appState.addImages(images);
+      }
     }
   }
 
